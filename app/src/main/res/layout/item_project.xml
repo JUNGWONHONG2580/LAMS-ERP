@@ -6,88 +6,63 @@
     android:layout_height="wrap_content"
     android:layout_marginStart="12dp"
     android:layout_marginEnd="12dp"
-    android:layout_marginTop="6dp"
-    android:layout_marginBottom="6dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="3dp">
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="2dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        android:gravity="center_vertical">
-
-        <TextView
-            android:id="@+id/chipIcon"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:gravity="center"
-            android:textSize="22sp"
-            android:background="@drawable/bg_chip"
-            android:layout_marginEnd="12dp"/>
+        android:orientation="vertical"
+        android:padding="14dp">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="4dp">
-
-                <TextView
-                    android:id="@+id/tvCode"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="PROJ-001"
-                    android:textColor="#1A237E"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:layout_marginEnd="8dp"/>
-
-                <TextView
-                    android:id="@+id/tvStatus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="진행중"
-                    android:textSize="11sp"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
-                    android:paddingTop="2dp"
-                    android:paddingBottom="2dp"
-                    android:background="@drawable/bg_status"/>
-            </LinearLayout>
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="4dp">
 
             <TextView
-                android:id="@+id/tvName"
-                android:layout_width="match_parent"
+                android:id="@+id/tvCode"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="프로젝트명"
-                android:textColor="#212121"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="2dp"/>
+                android:layout_weight="1"
+                android:text="PROJ-001"
+                android:textColor="#1A237E"
+                android:textSize="12sp"
+                android:textStyle="bold"/>
 
             <TextView
-                android:id="@+id/tvClient"
-                android:layout_width="match_parent"
+                android:id="@+id/tvStatus"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="고객사"
-                android:textColor="#757575"
-                android:textSize="13sp"/>
+                android:text="진행중"
+                android:textSize="11sp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:background="@drawable/bg_status"/>
         </LinearLayout>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/tvName"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="›"
-            android:textColor="#BDBDBD"
-            android:textSize="24sp"
-            android:layout_marginStart="8dp"/>
+            android:text="프로젝트명"
+            android:textColor="#212121"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="2dp"/>
+
+        <TextView
+            android:id="@+id/tvClient"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="고객사"
+            android:textColor="#757575"
+            android:textSize="12sp"/>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
