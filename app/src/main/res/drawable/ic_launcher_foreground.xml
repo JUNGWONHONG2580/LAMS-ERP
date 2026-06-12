@@ -4,12 +4,20 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
+  <!-- 기차 몸체 -->
   <path
       android:fillColor="#FFFFFF"
       android:pathData="M20,50 L88,50 Q92,50 92,54 L92,70 Q92,74 88,74 L20,74 Q16,74 16,70 L16,54 Q16,50 20,50Z"/>
+  <!-- 기차 지붕 -->
   <path
       android:fillColor="#FFFFFF"
       android:pathData="M30,44 L78,44 Q82,44 82,48 L82,52 L26,52 L26,48 Q26,44 30,44Z"/>
-  <circle android:fillColor="#42A5F5" android:cx="30" android:cy="74" android:r="6"/>
-  <circle android:fillColor="#42A5F5" android:cx="78" android:cy="74" android:r="6"/>
+  <!-- 왼쪽 바퀴 -->
+  <path
+      android:fillColor="#42A5F5"
+      android:pathData="M30,74 m-6,0 a6,6 0 1,0 12,0 a6,6 0 1,0 -12,0Z"/>
+  <!-- 오른쪽 바퀴 -->
+  <path
+      android:fillColor="#42A5F5"
+      android:pathData="M78,74 m-6,0 a6,6 0 1,0 12,0 a6,6 0 1,0 -12,0Z"/>
 </vector>

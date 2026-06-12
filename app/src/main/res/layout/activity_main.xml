@@ -22,7 +22,7 @@
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:hint="프로젝트 코드, 명칭, 고객사 검색"
-            android:hintTextColor="#9E9E9E"
+            android:textColorHint="#9E9E9E"
             android:textColor="#212121"
             android:inputType="text"
             android:imeOptions="actionSearch"
