@@ -123,7 +123,7 @@ class UploadActivity : AppCompatActivity() {
     private fun confirmUpload() {
         if (uris.isEmpty()) { toast("파일을 선택하세요."); return }
         val uploader = uploaderName()
-        AlertDialog.Builder(this)
+        AlertDialog.Builder(this, android.R.style.Theme_Material_Light_Dialog_Alert)
             .setTitle("업로드 확인")
             .setMessage("프로젝트: $projectName\n\n${uris.size}개 파일을 업로드합니까?\n업로더: $uploader")
             .setPositiveButton("업로드") { _, _ -> doUpload(uploader) }
