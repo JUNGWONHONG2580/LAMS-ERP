@@ -26,7 +26,6 @@
         <EditText android:id="@+id/etSearch"
             android:layout_width="match_parent" android:layout_height="44dp"
             android:hint="검색어 입력..."
-            android:hintTextColor="#A0AEC0"
             android:textColor="#1A202C"
             android:textColorHint="#A0AEC0"
             android:background="@drawable/bg_search"
