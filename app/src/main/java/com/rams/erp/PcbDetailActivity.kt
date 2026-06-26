@@ -45,21 +45,21 @@ class PcbDetailActivity : AppCompatActivity() {
 
                 // 기본 정보
                 setTv(R.id.tvPcbManageNo,      detail.manage_no)
-                setTv(R.id.tvPcbProjectName,   detail.project_name.ifBlank { "-" })
-                setTv(R.id.tvPcbModelName,     detail.model_name.ifBlank { "-" })
-                setTv(R.id.tvPcbCompany,       detail.company.ifBlank { "-" })
-                setTv(R.id.tvPcbDesigner,      detail.designer.ifBlank { "-" })
+                setTv(R.id.tvPcbProjectName,   detail.project_name ?: "-")
+                setTv(R.id.tvPcbModelName,     detail.model_name ?: "-")
+                setTv(R.id.tvPcbCompany,       detail.company ?: "-")
+                setTv(R.id.tvPcbDesigner,      detail.designer ?: "-")
                 setTv(R.id.tvPcbLayers,        "${detail.layers}층")
                 setTv(R.id.tvPcbThickness,     "${detail.thickness}mm")
                 setTv(R.id.tvPcbLinkedProject,
-                    if (detail.linked_project_code.isNotBlank())
-                        "[${detail.linked_project_code}] ${detail.linked_project_name}"
+                    if (!detail.linked_project_code.isNullOrBlank())
+                        "[${detail.linked_project_code}] ${detail.linked_project_name ?: ""}"
                     else "-"
                 )
 
                 // 이슈/메모
                 val layoutNote = findViewById<LinearLayout>(R.id.layoutPcbNote)
-                if (detail.note.isNotBlank()) {
+                if (!detail.note.isNullOrBlank()) {
                     layoutNote.visibility = View.VISIBLE
                     setTv(R.id.tvPcbNote, detail.note)
                 } else {

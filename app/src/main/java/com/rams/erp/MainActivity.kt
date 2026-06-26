@@ -108,7 +108,7 @@ class MainActivity : AppCompatActivity() {
                 else list.filter {
                     it.code.contains(currentSearch, true) ||
                     it.name.contains(currentSearch, true) ||
-                    it.client.contains(currentSearch, true)
+                    (it.client ?: "").contains(currentSearch, true)
                 }
                 layoutPager.visibility = View.GONE
                 showProjectList(filtered)
@@ -170,9 +170,19 @@ class ProjAdapter(private val items: List<Project>, private val click: (Project)
     override fun onCreateViewHolder(p: ViewGroup, t: Int) = VH(LayoutInflater.from(p.context).inflate(R.layout.item_project, p, false))
     override fun getItemCount() = items.size
     override fun onBindViewHolder(h: VH, pos: Int) {
-        val p = items[pos]; h.code.text = p.code; h.name.text = p.name; h.client.text = p.client.ifBlank { "고객사 미지정" }; h.status.text = p.status
-        val (bg, fg) = when(p.status) { "진행중" -> "#E8F5E9" to "#2E7D32"; "완료" -> "#E3F2FD" to "#1565C0"; "보류" -> "#FFF8E1" to "#F57F17"; else -> "#F5F5F5" to "#616161" }
-        h.status.setBackgroundColor(android.graphics.Color.parseColor(bg)); h.status.setTextColor(android.graphics.Color.parseColor(fg))
+        val p = items[pos]
+        h.code.text   = p.code
+        h.name.text   = p.name
+        h.client.text = p.client ?: "고객사 미지정"
+        h.status.text = p.status ?: "-"
+        val (bg, fg) = when(p.status) {
+            "진행중" -> "#E8F5E9" to "#2E7D32"
+            "완료"   -> "#E3F2FD" to "#1565C0"
+            "보류"   -> "#FFF8E1" to "#F57F17"
+            else     -> "#F5F5F5" to "#616161"
+        }
+        h.status.setBackgroundColor(android.graphics.Color.parseColor(bg))
+        h.status.setTextColor(android.graphics.Color.parseColor(fg))
         h.itemView.setOnClickListener { click(p) }
     }
 }
@@ -186,9 +196,13 @@ class PcbAdapter(private val items: List<PcbProject>, private val click: (PcbPro
     override fun onCreateViewHolder(p: ViewGroup, t: Int) = VH(LayoutInflater.from(p.context).inflate(R.layout.item_project, p, false))
     override fun getItemCount() = items.size
     override fun onBindViewHolder(h: VH, pos: Int) {
-        val p = items[pos]; h.code.text = p.manage_no; h.name.text = p.project_name.ifBlank { "-" }
-        h.client.text = p.model_name.ifBlank { "모델명 미지정" }; h.status.text = "${p.layers}층 / ${p.thickness}mm"
-        h.status.setBackgroundColor(android.graphics.Color.parseColor("#EBF8FF")); h.status.setTextColor(android.graphics.Color.parseColor("#1A237E"))
+        val p = items[pos]
+        h.code.text   = p.manage_no
+        h.name.text   = p.project_name ?: "-"
+        h.client.text = p.model_name ?: "모델명 미지정"
+        h.status.text = "${p.layers}층 / ${p.thickness}mm"
+        h.status.setBackgroundColor(android.graphics.Color.parseColor("#EBF8FF"))
+        h.status.setTextColor(android.graphics.Color.parseColor("#1A237E"))
         h.itemView.setOnClickListener { click(p) }
     }
 }

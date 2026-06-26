@@ -51,18 +51,18 @@ class ProjectDetailActivity : AppCompatActivity() {
             // 기본 정보
             setTv(R.id.tvDetailCode,      detail.code)
             setTv(R.id.tvDetailName,      detail.name)
-            setTv(R.id.tvDetailClient,    detail.client.ifBlank { "-" })
-            setTv(R.id.tvDetailPm,        detail.pm.ifBlank { "-" })
-            setTv(R.id.tvDetailContact,   detail.contact.ifBlank { "-" })
-            setTv(R.id.tvDetailStatus,    detail.status)
-            setTv(R.id.tvDetailTax,       detail.tax_invoice.ifBlank { "미발행" })
+            setTv(R.id.tvDetailClient,    detail.client ?: "-")
+            setTv(R.id.tvDetailPm,        detail.pm ?: "-")
+            setTv(R.id.tvDetailContact,   detail.contact ?: "-")
+            setTv(R.id.tvDetailStatus,    detail.status ?: "-")
+            setTv(R.id.tvDetailTax,       detail.tax_invoice ?: "미발행")
             setTv(R.id.tvDetailProgress,  "${detail.progress}%")
-            setTv(R.id.tvDetailStartDate, detail.start_date.ifBlank { "-" })
-            setTv(R.id.tvDetailEndDate,   detail.end_date.ifBlank { "-" })
+            setTv(R.id.tvDetailStartDate, detail.start_date ?: "-")
+            setTv(R.id.tvDetailEndDate,   detail.end_date ?: "-")
 
             // 이슈
             val layoutIssue = findViewById<LinearLayout>(R.id.layoutIssue)
-            if (detail.issue.isNotBlank()) {
+            if (!detail.issue.isNullOrBlank()) {
                 layoutIssue.visibility = View.VISIBLE
                 setTv(R.id.tvDetailIssue, detail.issue)
             } else {

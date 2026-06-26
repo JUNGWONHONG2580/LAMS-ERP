@@ -13,10 +13,18 @@ import java.util.concurrent.TimeUnit
 // ── 데이터 모델 ──
 
 data class Project(
-    val id: Int, val code: String, val name: String,
-    val client: String = "", val pm: String = "", val contact: String = "",
-    val status: String = "", val tax_invoice: String = "", val issue: String = "",
-    val start_date: String = "", val end_date: String = "", val progress: Int = 0
+    val id: Int,
+    val code: String,
+    val name: String,
+    val client: String? = null,
+    val pm: String? = null,
+    val contact: String? = null,
+    val status: String? = null,
+    val tax_invoice: String? = null,
+    val issue: String? = null,
+    val start_date: String? = null,
+    val end_date: String? = null,
+    val progress: Int = 0
 )
 
 data class ProjectFile(
@@ -29,10 +37,17 @@ data class ProjectFile(
 )
 
 data class PcbProject(
-    val id: Int, val manage_no: String, val project_name: String = "",
-    val model_name: String = "", val company: String = "", val designer: String = "",
-    val layers: Int = 2, val thickness: Double = 1.6, val note: String = "",
-    val linked_project_code: String = "", val linked_project_name: String = ""
+    val id: Int,
+    val manage_no: String,
+    val project_name: String?,
+    val model_name: String?,
+    val company: String?,
+    val designer: String?,
+    val layers: Int = 2,
+    val thickness: Double = 1.6,
+    val note: String?,
+    val linked_project_code: String?,
+    val linked_project_name: String?
 )
 
 // 페이지네이션 응답 모델
