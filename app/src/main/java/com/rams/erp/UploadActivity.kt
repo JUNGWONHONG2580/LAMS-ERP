@@ -1,7 +1,8 @@
 package com.rams.erp
 
+import android.Manifest
 import android.content.ContentValues
-import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -14,6 +15,7 @@ import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -32,23 +34,27 @@ class UploadActivity : AppCompatActivity() {
     private var cameraUri: Uri? = null
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
+    // 카메라 권한 요청
+    private val requestCameraPermission = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (granted) launchCamera()
+        else toast("카메라 권한이 필요합니다.\n설정 > 앱 > RAMS ERP > 권한에서 허용해 주세요.")
+    }
+
+    // 갤러리 선택
     private val galleryLauncher = registerForActivityResult(
         ActivityResultContracts.GetMultipleContents()
     ) { list ->
-        if (!list.isNullOrEmpty()) {
-            uris.addAll(list)
-            refreshPreview()
-        }
+        if (!list.isNullOrEmpty()) { uris.addAll(list); refreshPreview() }
     }
 
+    // 카메라 촬영
     private val cameraLauncher = registerForActivityResult(
         ActivityResultContracts.TakePicture()
     ) { ok ->
         if (ok == true) {
-            cameraUri?.let { uri ->
-                uris.add(uri)
-                refreshPreview()
-            }
+            cameraUri?.let { uris.add(it); refreshPreview() }
         }
     }
 
@@ -65,20 +71,32 @@ class UploadActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.tvProjectCode).text  = projectCode
         findViewById<TextView>(R.id.tvProjectTitle).text = projectName
 
-        findViewById<Button>(R.id.btnCamera).setOnClickListener  { openCamera() }
+        findViewById<Button>(R.id.btnCamera).setOnClickListener  { checkCameraAndLaunch() }
         findViewById<Button>(R.id.btnGallery).setOnClickListener { galleryLauncher.launch("*/*") }
         findViewById<Button>(R.id.btnUpload).setOnClickListener  { confirmUpload() }
 
         refreshPreview()
     }
 
-    private fun openCamera() {
+    // ── 카메라 권한 확인 후 실행 ──
+    private fun checkCameraAndLaunch() {
+        when {
+            ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                    == PackageManager.PERMISSION_GRANTED -> {
+                launchCamera()
+            }
+            else -> {
+                requestCameraPermission.launch(Manifest.permission.CAMERA)
+            }
+        }
+    }
+
+    private fun launchCamera() {
         try {
             val ts   = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
             val name = "RAMS_$ts.jpg"
 
             val uri: Uri? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                // Android 10+ : MediaStore 방식
                 val cv = ContentValues().apply {
                     put(MediaStore.Images.Media.DISPLAY_NAME, name)
                     put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
@@ -86,7 +104,6 @@ class UploadActivity : AppCompatActivity() {
                 }
                 contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, cv)
             } else {
-                // Android 9 이하 : FileProvider 방식
                 val f = File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), name)
                 FileProvider.getUriForFile(this, "${packageName}.fileprovider", f)
             }
@@ -95,7 +112,6 @@ class UploadActivity : AppCompatActivity() {
                 toast("카메라를 준비할 수 없습니다. 갤러리를 이용해 주세요.")
                 return
             }
-
             cameraUri = uri
             cameraLauncher.launch(uri)
 
@@ -127,11 +143,7 @@ class UploadActivity : AppCompatActivity() {
             val tempFiles = withContext(Dispatchers.IO) {
                 uris.mapIndexedNotNull { i, uri -> copyToTemp(uri, i) }
             }
-            if (tempFiles.isEmpty()) {
-                toast("파일 준비 실패")
-                resetUI()
-                return@launch
-            }
+            if (tempFiles.isEmpty()) { toast("파일 준비 실패"); resetUI(); return@launch }
 
             setProgressText("업로드 중...")
             val result = withContext(Dispatchers.IO) {
@@ -145,8 +157,7 @@ class UploadActivity : AppCompatActivity() {
             if (result.ok) {
                 setProgressText("✅ ${result.uploaded}개 파일 업로드 완료!")
                 toast("✅ ${result.project_name}에 ${result.uploaded}개 첨부 완료")
-                uris.clear()
-                refreshPreview()
+                uris.clear(); refreshPreview()
             } else {
                 setProgressText("❌ ${result.error.ifBlank { "업로드 실패" }}")
                 toast(result.error.ifBlank { "업로드 실패" })
@@ -175,36 +186,24 @@ class UploadActivity : AppCompatActivity() {
         val btn = findViewById<Button>(R.id.btnUpload)
         btn.isEnabled = count > 0
         btn.text = if (count > 0) "📤 ${count}개 업로드" else "📤 업로드"
-
         val rv = findViewById<RecyclerView>(R.id.rvPreview)
         rv.layoutManager = GridLayoutManager(this, 3)
-        rv.adapter = PreviewAdapter(uris.toList()) { pos ->
-            uris.removeAt(pos); refreshPreview()
-        }
+        rv.adapter = PreviewAdapter(uris.toList()) { pos -> uris.removeAt(pos); refreshPreview() }
     }
 
     private fun setButtonsEnabled(on: Boolean) = runOnUiThread {
-        listOf(R.id.btnCamera, R.id.btnGallery).forEach {
-            findViewById<Button>(it).isEnabled = on
-        }
+        listOf(R.id.btnCamera, R.id.btnGallery).forEach { findViewById<Button>(it).isEnabled = on }
     }
-
     private fun showProgress(show: Boolean) = runOnUiThread {
         val vis = if (show) View.VISIBLE else View.GONE
         findViewById<ProgressBar>(R.id.progressBar).visibility = vis
         findViewById<TextView>(R.id.tvProgress).visibility = vis
     }
-
     private fun setProgressText(msg: String) = runOnUiThread {
         findViewById<TextView>(R.id.tvProgress).text = msg
     }
-
-    private fun resetUI() = runOnUiThread {
-        showProgress(false); setButtonsEnabled(true)
-    }
-
-    private fun toast(msg: String) =
-        Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
+    private fun resetUI() = runOnUiThread { showProgress(false); setButtonsEnabled(true) }
+    private fun toast(msg: String) = Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
 
     override fun onSupportNavigateUp(): Boolean { finish(); return true }
     override fun onDestroy() { super.onDestroy(); scope.cancel() }
@@ -214,18 +213,14 @@ class PreviewAdapter(
     private val list: List<Uri>,
     private val remove: (Int) -> Unit
 ) : RecyclerView.Adapter<PreviewAdapter.VH>() {
-
     inner class VH(v: View) : RecyclerView.ViewHolder(v) {
         val img: ImageView   = v.findViewById(R.id.ivPreview)
         val del: ImageButton = v.findViewById(R.id.btnRemove)
         val typ: TextView    = v.findViewById(R.id.tvType)
     }
-
     override fun onCreateViewHolder(p: ViewGroup, t: Int) =
         VH(LayoutInflater.from(p.context).inflate(R.layout.item_preview, p, false))
-
     override fun getItemCount() = list.size
-
     override fun onBindViewHolder(h: VH, pos: Int) {
         val uri  = list[pos]
         val mime = h.itemView.context.contentResolver.getType(uri) ?: ""
