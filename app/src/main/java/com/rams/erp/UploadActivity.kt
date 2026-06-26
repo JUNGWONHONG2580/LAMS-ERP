@@ -1,6 +1,5 @@
 package com.rams.erp
 
-import android.app.Activity
 import android.content.ContentValues
 import android.content.Intent
 import android.net.Uri
@@ -8,7 +7,9 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -33,11 +34,23 @@ class UploadActivity : AppCompatActivity() {
 
     private val galleryLauncher = registerForActivityResult(
         ActivityResultContracts.GetMultipleContents()
-    ) { list -> if (list.isNotEmpty()) { uris.addAll(list); refreshPreview() } }
+    ) { list ->
+        if (!list.isNullOrEmpty()) {
+            uris.addAll(list)
+            refreshPreview()
+        }
+    }
 
     private val cameraLauncher = registerForActivityResult(
         ActivityResultContracts.TakePicture()
-    ) { ok -> if (ok && cameraUri != null) { uris.add(cameraUri!!); refreshPreview() } }
+    ) { ok ->
+        if (ok == true) {
+            cameraUri?.let { uri ->
+                uris.add(uri)
+                refreshPreview()
+            }
+        }
+    }
 
     override fun onCreate(s: Bundle?) {
         super.onCreate(s)
@@ -53,30 +66,42 @@ class UploadActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.tvProjectTitle).text = projectName
 
         findViewById<Button>(R.id.btnCamera).setOnClickListener  { openCamera() }
-        findViewById<Button>(R.id.btnGallery).setOnClickListener {
-            galleryLauncher.launch("*/*")  // 이미지+동영상 모두 허용
-        }
+        findViewById<Button>(R.id.btnGallery).setOnClickListener { galleryLauncher.launch("*/*") }
         findViewById<Button>(R.id.btnUpload).setOnClickListener  { confirmUpload() }
 
         refreshPreview()
     }
 
     private fun openCamera() {
-        val ts   = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
-        val name = "RAMS_$ts.jpg"
+        try {
+            val ts   = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+            val name = "RAMS_$ts.jpg"
 
-        cameraUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            val cv = ContentValues().apply {
-                put(MediaStore.Images.Media.DISPLAY_NAME, name)
-                put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
-                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/RamsERP")
+            val uri: Uri? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                // Android 10+ : MediaStore 방식
+                val cv = ContentValues().apply {
+                    put(MediaStore.Images.Media.DISPLAY_NAME, name)
+                    put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+                    put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/RamsERP")
+                }
+                contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, cv)
+            } else {
+                // Android 9 이하 : FileProvider 방식
+                val f = File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), name)
+                FileProvider.getUriForFile(this, "${packageName}.fileprovider", f)
             }
-            contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, cv)
-        } else {
-            val f = File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), name)
-            FileProvider.getUriForFile(this, "${packageName}.fileprovider", f)
+
+            if (uri == null) {
+                toast("카메라를 준비할 수 없습니다. 갤러리를 이용해 주세요.")
+                return
+            }
+
+            cameraUri = uri
+            cameraLauncher.launch(uri)
+
+        } catch (e: Exception) {
+            toast("카메라 오류: ${e.message}")
         }
-        cameraUri?.let { cameraLauncher.launch(it) }
     }
 
     private fun confirmUpload() {
@@ -102,7 +127,11 @@ class UploadActivity : AppCompatActivity() {
             val tempFiles = withContext(Dispatchers.IO) {
                 uris.mapIndexedNotNull { i, uri -> copyToTemp(uri, i) }
             }
-            if (tempFiles.isEmpty()) { toast("파일 준비 실패"); resetUI(); return@launch }
+            if (tempFiles.isEmpty()) {
+                toast("파일 준비 실패")
+                resetUI()
+                return@launch
+            }
 
             setProgressText("업로드 중...")
             val result = withContext(Dispatchers.IO) {
@@ -116,7 +145,8 @@ class UploadActivity : AppCompatActivity() {
             if (result.ok) {
                 setProgressText("✅ ${result.uploaded}개 파일 업로드 완료!")
                 toast("✅ ${result.project_name}에 ${result.uploaded}개 첨부 완료")
-                uris.clear(); refreshPreview()
+                uris.clear()
+                refreshPreview()
             } else {
                 setProgressText("❌ ${result.error.ifBlank { "업로드 실패" }}")
                 toast(result.error.ifBlank { "업로드 실패" })
@@ -128,7 +158,7 @@ class UploadActivity : AppCompatActivity() {
     private fun copyToTemp(uri: Uri, idx: Int): File? {
         return try {
             val mime = contentResolver.getType(uri) ?: "image/jpeg"
-            val ext  = when {
+            val ext = when {
                 mime.contains("mp4") || mime.contains("video") -> ".mp4"
                 mime.contains("png") -> ".png"
                 else -> ".jpg"
@@ -154,7 +184,7 @@ class UploadActivity : AppCompatActivity() {
     }
 
     private fun setButtonsEnabled(on: Boolean) = runOnUiThread {
-        listOf<Int>(R.id.btnCamera, R.id.btnGallery).forEach {
+        listOf(R.id.btnCamera, R.id.btnGallery).forEach {
             findViewById<Button>(it).isEnabled = on
         }
     }
@@ -173,9 +203,8 @@ class UploadActivity : AppCompatActivity() {
         showProgress(false); setButtonsEnabled(true)
     }
 
-    private fun toast(msg: String) = runOnUiThread {
+    private fun toast(msg: String) =
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
-    }
 
     override fun onSupportNavigateUp(): Boolean { finish(); return true }
     override fun onDestroy() { super.onDestroy(); scope.cancel() }

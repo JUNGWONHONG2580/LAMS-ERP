@@ -12,20 +12,16 @@
         android:background="#1A237E"
         android:padding="16dp"
         android:orientation="vertical">
-
         <TextView
             android:id="@+id/tvProjectCode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="PROJ-001"
             android:textColor="#90CAF9"
             android:textSize="13sp"/>
-
         <TextView
             android:id="@+id/tvProjectTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="프로젝트명"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
             android:textStyle="bold"/>
@@ -35,14 +31,13 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- 업로더 이름 입력 -->
+            <!-- 업로더 이름 -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -60,6 +55,8 @@
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:hint="이름 입력 (선택)"
+                android:textColorHint="#A0AEC0"
+                android:textColor="#1A202C"
                 android:textSize="15sp"
                 android:layout_marginBottom="16dp"/>
 
@@ -69,7 +66,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginBottom="16dp">
-
                 <Button
                     android:id="@+id/btnCamera"
                     android:layout_width="0dp"
@@ -80,7 +76,6 @@
                     android:textColor="#FFFFFF"
                     android:textSize="15sp"
                     android:layout_marginEnd="8dp"/>
-
                 <Button
                     android:id="@+id/btnGallery"
                     android:layout_width="0dp"
@@ -102,7 +97,7 @@
                 android:textSize="14sp"
                 android:layout_marginBottom="12dp"/>
 
-            <!-- 미리보기 그리드 -->
+            <!-- 미리보기 -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvPreview"
                 android:layout_width="match_parent"
@@ -125,7 +120,6 @@
                 android:id="@+id/tvProgress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
                 android:textColor="#1976D2"
                 android:textSize="14sp"
                 android:visibility="gone"
@@ -144,5 +138,4 @@
         android:textSize="18sp"
         android:textStyle="bold"
         android:enabled="false"/>
-
 </LinearLayout>
