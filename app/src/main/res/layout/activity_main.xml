@@ -3,70 +3,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F5F5F5">
-
-    <!-- 검색바 -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#1A237E"
-        android:padding="12dp"
-        android:orientation="horizontal">
-
-        <EditText
-            android:id="@+id/etSearch"
-            android:layout_width="0dp"
-            android:layout_height="44dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_search"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:hint="프로젝트 코드, 명칭, 고객사 검색"
-            android:textColorHint="#9E9E9E"
-            android:textColor="#212121"
-            android:inputType="text"
-            android:imeOptions="actionSearch"
-            android:singleLine="true"/>
+    android:background="#F7FAFC">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:orientation="horizontal" android:background="#FFFFFF" android:elevation="2dp">
+        <TextView android:id="@+id/tabProject" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="📋 프로젝트 관리" android:gravity="center" android:textSize="13sp" android:textStyle="bold" android:background="#185FA5" android:textColor="#FFFFFF"/>
+        <TextView android:id="@+id/tabPcb" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="🔲 PCB 프로젝트" android:gravity="center" android:textSize="13sp" android:textStyle="bold" android:background="#E2E8F0" android:textColor="#4A5568"/>
     </LinearLayout>
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="match_parent"
-        android:layout_height="4dp"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:indeterminate="true"
-        android:indeterminateTint="#1976D2"
-        android:visibility="gone"/>
-
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefresh"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"/>
-
-            <TextView
-                android:id="@+id/tvEmpty"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="프로젝트가 없습니다."
-                android:textColor="#9E9E9E"
-                android:textSize="16sp"
-                android:gravity="center"
-                android:visibility="gone"/>
-        </FrameLayout>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:padding="12dp" android:background="#FFFFFF">
+        <EditText android:id="@+id/etSearch" android:layout_width="match_parent" android:layout_height="42dp" android:hint="검색어 입력..." android:background="@drawable/bg_search" android:paddingStart="12dp" android:paddingEnd="12dp" android:imeOptions="actionSearch" android:inputType="text" android:singleLine="true" android:textSize="14sp"/>
+    </LinearLayout>
+    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E2E8F0"/>
+    <ProgressBar android:id="@+id/progressBar" android:layout_width="match_parent" android:layout_height="3dp" style="?android:attr/progressBarStyleHorizontal" android:indeterminate="true" android:visibility="gone"/>
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout android:id="@+id/swipeRefresh" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+        <androidx.recyclerview.widget.RecyclerView android:id="@+id/recyclerView" android:layout_width="match_parent" android:layout_height="match_parent" android:padding="8dp" android:clipToPadding="false"/>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
+    <TextView android:id="@+id/tvEmpty" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="데이터를 불러오는 중..." android:gravity="center" android:padding="32dp" android:textColor="#A0AEC0" android:textSize="14sp" android:visibility="gone"/>
 </LinearLayout>
