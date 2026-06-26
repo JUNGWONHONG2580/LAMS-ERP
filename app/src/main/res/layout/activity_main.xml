@@ -3,33 +3,45 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F7FAFC">
+    android:background="#F0F4F8">
 
     <!-- 상단 탭 -->
-    <LinearLayout android:layout_width="match_parent" android:layout_height="48dp"
-        android:orientation="horizontal" android:background="#FFFFFF" android:elevation="2dp">
-        <TextView android:id="@+id/tabProject" android:layout_width="0dp" android:layout_height="match_parent"
-            android:layout_weight="1" android:text="📋 프로젝트 관리" android:gravity="center"
-            android:textSize="13sp" android:textStyle="bold" android:background="#185FA5" android:textColor="#FFFFFF"/>
-        <TextView android:id="@+id/tabPcb" android:layout_width="0dp" android:layout_height="match_parent"
-            android:layout_weight="1" android:text="🔲 PCB 프로젝트" android:gravity="center"
-            android:textSize="13sp" android:textStyle="bold" android:background="#E2E8F0" android:textColor="#4A5568"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="52dp"
+        android:orientation="horizontal" android:background="#FFFFFF" android:elevation="4dp">
+        <TextView android:id="@+id/tabProject"
+            android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+            android:text="📋 프로젝트 관리" android:gravity="center"
+            android:textSize="13sp" android:textStyle="bold"
+            android:background="#185FA5" android:textColor="#FFFFFF"/>
+        <TextView android:id="@+id/tabPcb"
+            android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+            android:text="🔲 PCB 프로젝트" android:gravity="center"
+            android:textSize="13sp" android:textStyle="bold"
+            android:background="#E2E8F0" android:textColor="#2D3748"/>
     </LinearLayout>
 
-    <!-- 검색 -->
+    <!-- 검색창 -->
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:orientation="horizontal" android:padding="12dp" android:background="#FFFFFF">
-        <EditText android:id="@+id/etSearch" android:layout_width="match_parent" android:layout_height="42dp"
-            android:hint="검색어 입력..." android:background="@drawable/bg_search"
-            android:paddingStart="12dp" android:paddingEnd="12dp"
+        android:padding="12dp" android:background="#FFFFFF">
+        <EditText android:id="@+id/etSearch"
+            android:layout_width="match_parent" android:layout_height="44dp"
+            android:hint="검색어 입력..."
+            android:hintTextColor="#A0AEC0"
+            android:textColor="#1A202C"
+            android:textColorHint="#A0AEC0"
+            android:background="@drawable/bg_search"
+            android:paddingStart="14dp" android:paddingEnd="14dp"
             android:imeOptions="actionSearch" android:inputType="text"
             android:singleLine="true" android:textSize="14sp"/>
     </LinearLayout>
 
     <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E2E8F0"/>
 
-    <ProgressBar android:id="@+id/progressBar" android:layout_width="match_parent" android:layout_height="3dp"
-        style="?android:attr/progressBarStyleHorizontal" android:indeterminate="true" android:visibility="gone"/>
+    <ProgressBar android:id="@+id/progressBar"
+        android:layout_width="match_parent" android:layout_height="3dp"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:indeterminate="true" android:visibility="gone"
+        android:indeterminateTint="#185FA5"/>
 
     <!-- 목록 -->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout android:id="@+id/swipeRefresh"
@@ -39,35 +51,30 @@
             android:padding="8dp" android:clipToPadding="false"/>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <TextView android:id="@+id/tvEmpty" android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:text="데이터를 불러오는 중..." android:gravity="center" android:padding="32dp"
-        android:textColor="#A0AEC0" android:textSize="14sp" android:visibility="gone"/>
+    <TextView android:id="@+id/tvEmpty"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="데이터를 불러오는 중..." android:gravity="center"
+        android:padding="32dp" android:textColor="#A0AEC0" android:textSize="14sp"
+        android:visibility="gone"/>
 
-    <!-- 페이지 이동 버튼 (PCB 탭에서만 표시) -->
+    <!-- 페이지 이동 버튼 (PCB 탭) -->
     <LinearLayout android:id="@+id/layoutPager"
         android:layout_width="match_parent" android:layout_height="52dp"
         android:orientation="horizontal" android:background="#FFFFFF"
         android:elevation="4dp" android:gravity="center_vertical"
         android:paddingStart="8dp" android:paddingEnd="8dp"
         android:visibility="gone">
-
         <Button android:id="@+id/btnPrev"
             android:layout_width="72dp" android:layout_height="36dp"
             android:text="◀ 이전" android:textSize="12sp"
-            android:backgroundTint="#185FA5" android:textColor="#FFFFFF"
-            android:padding="0dp"/>
-
+            android:backgroundTint="#185FA5" android:textColor="#FFFFFF" android:padding="0dp"/>
         <TextView android:id="@+id/tvPageInfo"
-            android:layout_width="0dp" android:layout_height="wrap_content"
-            android:layout_weight="1" android:gravity="center"
-            android:textSize="12sp" android:textColor="#4A5568"
+            android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+            android:gravity="center" android:textSize="12sp" android:textColor="#2D3748"
             android:text="1 / 1 페이지"/>
-
         <Button android:id="@+id/btnNext"
             android:layout_width="72dp" android:layout_height="36dp"
             android:text="다음 ▶" android:textSize="12sp"
-            android:backgroundTint="#185FA5" android:textColor="#FFFFFF"
-            android:padding="0dp"/>
+            android:backgroundTint="#185FA5" android:textColor="#FFFFFF" android:padding="0dp"/>
     </LinearLayout>
-
 </LinearLayout>
