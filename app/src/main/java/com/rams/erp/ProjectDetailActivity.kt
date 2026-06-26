@@ -138,7 +138,7 @@ class FileAdapter(
 
     override fun onBindViewHolder(h: VH, pos: Int) {
         val f = items[pos]
-        val n = f.original_name
+        val n = f.original_name ?: f.filename ?: "파일"
         h.icon.text = when {
             n.matches(Regex(".*\\.(jpg|jpeg|png|gif|webp)$", RegexOption.IGNORE_CASE)) -> "🖼️"
             n.matches(Regex(".*\\.(mp4|mov|avi|mkv)$",       RegexOption.IGNORE_CASE)) -> "🎥"
@@ -152,7 +152,10 @@ class FileAdapter(
             "${"%.1f".format(f.file_size / 1024.0 / 1024.0)} MB"
         else
             "${f.file_size / 1024} KB"
-        h.date.text = f.created_at.take(10)
-        h.itemView.setOnClickListener { click(f) }
+        h.date.text = (f.created_at ?: "").take(10)
+        val filename = f.filename ?: ""
+        if (filename.isNotEmpty()) {
+            h.itemView.setOnClickListener { click(f) }
+        }
     }
 }

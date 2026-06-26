@@ -20,8 +20,12 @@ data class Project(
 )
 
 data class ProjectFile(
-    val id: Int, val filename: String, val original_name: String,
-    val file_type: String = "", val file_size: Long = 0, val created_at: String = ""
+    val id: Int,
+    val filename: String?,
+    val original_name: String?,
+    val file_type: String?,
+    val file_size: Long = 0,
+    val created_at: String?
 )
 
 data class PcbProject(
@@ -41,8 +45,12 @@ data class PcbPageResult(
 )
 
 data class PcbFile(
-    val id: Int, val filename: String, val original_name: String,
-    val category: String = "", val file_size: Long = 0, val created_at: String = ""
+    val id: Int,
+    val filename: String?,
+    val original_name: String?,
+    val category: String?,
+    val file_size: Long = 0,
+    val created_at: String?
 )
 
 data class UploadResult(

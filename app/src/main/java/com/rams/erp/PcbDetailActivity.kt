@@ -86,7 +86,7 @@ class PcbDetailActivity : AppCompatActivity() {
                     "bom"        to "BOM",
                     "assy"       to "자삽"
                 )
-                val grouped = files.groupBy { it.category }
+                val grouped = files.groupBy { it.category ?: "etc" }
 
                 catLabels.forEach { (key, label) ->
                     val catFiles = grouped[key]
@@ -125,9 +125,10 @@ class PcbDetailActivity : AppCompatActivity() {
         row.setPadding(px(8), px(12), px(8), px(12))
         row.setBackgroundColor(Color.parseColor("#F7FAFC"))
 
-        // 파일명
+        // 파일명 (null 안전)
+        val originalName = f.original_name ?: f.filename ?: "파일"
         val tvName = TextView(this@PcbDetailActivity)
-        tvName.text = f.original_name
+        tvName.text = originalName
         tvName.textSize = 13f
         tvName.setTextColor(Color.parseColor("#1A202C"))
         tvName.maxLines = 1
@@ -149,8 +150,10 @@ class PcbDetailActivity : AppCompatActivity() {
             LinearLayout.LayoutParams.WRAP_CONTENT
         ))
 
-        val filename = f.filename
-        row.setOnClickListener { openFile(filename) }
+        val filename = f.filename ?: ""
+        if (filename.isNotEmpty()) {
+            row.setOnClickListener { openFile(filename) }
+        }
         return row
     }
 
