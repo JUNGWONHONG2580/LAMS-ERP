@@ -80,7 +80,7 @@ class ProjectDetailActivity : AppCompatActivity() {
                 tvNoFiles.visibility = View.GONE
                 rvFiles.layoutManager = LinearLayoutManager(this@ProjectDetailActivity)
                 rvFiles.isNestedScrollingEnabled = false
-                rvFiles.adapter = FileAdapter(files) { f -> openFile(f.filename) }
+                rvFiles.adapter = FileAdapter(files) { f -> openFile(f.filename ?: "") }
             }
 
             // 업로드 버튼
